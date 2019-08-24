@@ -32,8 +32,39 @@ class DBConnection:
             self.connection.close() 
             self.connection_connected = False 
 
+    def estublish_cursor(self):
+        self.cursor = self.connection.cursor()
+    
+    def close_cursor(self):
+        self.cursor.close()
+
     def fetch_user_table(self): 
-        cursor = self.connection.cursor()
-        cursor.execute("SELECT * FROM user_table;")
-        print(cursor.fetchall())
+        self.cursor.execute("SELECT * FROM user_table;")
+        data = self.cursor.fetchall()
+        return data 
+    
+    def fetch_all_user_id(self): 
+        self.cursor.execute("SELECT user_id FROM user_table;")
+        data = self.cursor.fetchall()
+        return data 
+    
+    def fetch_user_id_via_user_name(self, user_name):
+        sql_command = ("SELECT user_id FROM user_table WHERE user_name = \'" + user_name + "\';")
+        self.cursor.execute(sql_command)
+        data = self.cursor.fetchall()
+        return data[0][0]
+
+    def check_user_exit_via_user_name(self, user_name): 
+        sql_command = ("SELECT user_id FROM user_table WHERE user_name = \'" + user_name + "\';")
+        self.cursor.execute(sql_command)
+        data = self.cursor.fetchall()
+        return not (data == []) 
+    
+    def fetch_user_password_via_user_id(self, user_id): 
+        sql_command = ("SELECT user_password FROM user_table WHERE user_id = " + str(user_id) + ";")
+        self.cursor.execute(sql_command)
+        data = self.cursor.fetchall()
+        return data[0][0]  
+
+
 
