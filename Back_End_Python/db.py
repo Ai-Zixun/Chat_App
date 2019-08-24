@@ -38,6 +38,8 @@ class DBConnection:
     def close_cursor(self):
         self.cursor.close()
 
+    # USER TABLE - FETCH 
+
     def fetch_user_table(self): 
         self.cursor.execute("SELECT * FROM user_table;")
         data = self.cursor.fetchall()
@@ -65,6 +67,32 @@ class DBConnection:
         self.cursor.execute(sql_command)
         data = self.cursor.fetchall()
         return data[0][0]  
+    # USER TABLE - CREATE  
 
+
+    # MESSAGE TABLE - FETCH 
+
+    def fetch_message_via_chatroom_id(self, chatroom_id):
+        sql_command = ("SELECT message_id, user_id, text, created_date FROM message_table WHERE chatroom_id = " + str(chatroom_id) + ";")
+        self.cursor.execute(sql_command)
+        data = self.cursor.fetchall()
+        return data       
+
+    def get_next_message_id(self):
+        id = 0
+        sql_command = ("SELECT message_id FROM message_table;")
+        self.cursor.execute(sql_command)
+        data = self.cursor.fetchall()
+        print(data)
+
+
+
+    # MESSAGE TABLE - CREATE
+
+    def create_message(self, chatroom_id):
+        sql_command = ("SELECT message_id, user_id, text, created_date FROM message_table WHERE chatroom_id = " + str(chatroom_id) + ";")
+        self.cursor.execute(sql_command)
+        data = self.cursor.fetchall()
+        return data  
 
 

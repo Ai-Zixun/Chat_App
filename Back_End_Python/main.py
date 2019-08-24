@@ -10,10 +10,11 @@ if __name__ == '__main__':
     con.estublish_connection()
     con.estublish_cursor()
 
-    print(con.fetch_user_id_via_user_name('admin'))
-    print(con.check_user_exit_via_user_name('admin'))
-    print(con.fetch_user_password_via_user_id(2))
-    print(logic.check_password(con, 'admin', 'admin'))
+    con.get_next_message_id()
 
     con.close_cursor()
     con.close_connection()
+
+
+
+
