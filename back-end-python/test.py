@@ -1,6 +1,7 @@
 from db import * 
 from const import * 
 from logic import * 
+from server import * 
 
 def init():
     con = DBConnection(host = DB_HOST, dbname = DB_NAME, port = DB_PORT, user = DB_USER, password = DB_PASSWORD)
@@ -18,6 +19,8 @@ def print_list(list):
         print("\t" + str(item))
 
 def test_db(con):
+    print("\n--- TEST DB ---")
+
     # Fetch User Table 
     print("Test: Fetch User Table")
     print_list(con.fetch_user_table())
@@ -47,7 +50,7 @@ def test_db(con):
 
     # Create User 
     print("Test: Create User")
-    con.create_user("NewUser", "password")
+    print("\t" + str(con.create_user("NewUser", "password")))
     
     # Fetch Message via Chatroom ID
     print("Test: Fetch User Password via User ID")
@@ -55,10 +58,31 @@ def test_db(con):
 
     # Create Message
     print("Test: Create Message")
-    con.create_message(0, 0, "Sent From Python")
+    print("\t" + str(con.create_message(0, 0, "Sent From Python")))
 
-if __name__ == '__main__':
+    # Fetch Chatroom 
+    print("Test: Fetch Chatroom")
+    print_list(con.fetch_chatroom())
+
+    # Create Message
+    print("Test: Create Chatroom")
+    print("\t" + str(con.create_chatroom("New Room")))
+
+def test_logic(con, logic):
+    print("\n--- TEST LOGIC ---")
+
+    # Check Password
+    print("Test: Check Password")
+    print("\t" + str(logic.check_password(con, "admin2", "admin") == True))
+    print("\t" + str(logic.check_password(con, "kurosuha", "admin") == False))
+
+def server_and_logic():
     con, logic = init()
     test_db(con)
+    test_logic(con, logic)
     close(con) 
+
+
+if __name__ == '__main__':
+    
 

@@ -1,6 +1,7 @@
 /* Delete User Table */
 DROP TABLE message_table; 
 DROP TABLE user_table; 
+DROP TABLE chatroom_table; 
 
 /* Create User Table */
 CREATE TABLE user_table (
@@ -16,13 +17,29 @@ INSERT INTO user_table (user_id, user_name, user_password, user_email, created_d
 VALUES  (0, 'admin', 'admin', 'admin@admin.com', CURRENT_TIMESTAMP),
         (1, 'admin2', 'admin', NULL, CURRENT_TIMESTAMP),
         (2, 'kurosuha', 'kurosuha', NULL,CURRENT_TIMESTAMP),
-        (3, 'user2', 'password', NULL, CURRENT_TIMESTAMP),
-        (DEFAULT, 'user4', 'password', 'user4@user.com', CURRENT_TIMESTAMP),
+        (3, 'user2', 'password', NULL, CURRENT_TIMESTAMP);
+
+INSERT INTO user_table (user_id, user_name, user_password, user_email, created_date) 
+VALUES  (DEFAULT, 'user4', 'password', 'user4@user.com', CURRENT_TIMESTAMP),
         (DEFAULT, 'user5', 'password', 'user5@user.com', CURRENT_TIMESTAMP),
         (DEFAULT, 'user6', 'password', 'user6@user.com', CURRENT_TIMESTAMP),
         (DEFAULT, 'user7', 'password', 'user7@user.com', CURRENT_TIMESTAMP),
         (DEFAULT, 'user8', 'password', 'user8@user.com', CURRENT_TIMESTAMP);
 
+/* Create Chatroom Table */
+CREATE TABLE chatroom_table (
+  chatroom_id SERIAL NOT NULL PRIMARY KEY,
+  chatroom_name VARCHAR(30) UNIQUE NOT NULL,
+  created_date TIMESTAMP
+);
+
+/* Create Chatroom Table */
+INSERT INTO chatroom_table (chatroom_id, chatroom_name, created_date) 
+VALUES  (0, 'admin', CURRENT_TIMESTAMP),
+        (1, 'Hello World', CURRENT_TIMESTAMP);
+
+INSERT INTO chatroom_table (chatroom_id, chatroom_name, created_date) 
+VALUES  (DEFAULT, 'admin', CURRENT_TIMESTAMP);
 
 /* Create Message Table */
 CREATE TABLE message_table (

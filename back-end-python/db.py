@@ -37,6 +37,11 @@ class DBConnection:
     
     def close_cursor(self):
         self.cursor.close()
+    
+    def reestublish_connection_and_cursor(self):
+        self.close_connection()
+        self.estublish_connection()
+        self.estublish_cursor()
 
     # USER TABLE - FETCH 
 
@@ -70,10 +75,15 @@ class DBConnection:
 
     # USER TABLE - CREATE  
 
-    def create_user(self, user_name, user_password, user_email = "NULL"): 
-        sql_command = ("INSERT INTO user_table (user_id, user_name, user_password, user_email, created_date) VALUES  (DEFAULT, '" + str(user_name) + "', '" + str(user_password) + "', '" + user_email + "', CURRENT_TIMESTAMP);")
-        self.cursor.execute(sql_command)
-        self.connection.commit()
+    def create_user(self, user_name, user_password): 
+        sql_command = ("INSERT INTO user_table (user_id, user_name, user_password, user_email, created_date) VALUES  (DEFAULT, '" + str(user_name) + "', '" + str(user_password) + "', NULL, CURRENT_TIMESTAMP);")
+        try:
+            self.cursor.execute(sql_command)
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            return -1; 
+        return 0; 
 
     # MESSAGE TABLE - FETCH 
 
@@ -87,7 +97,33 @@ class DBConnection:
 
     def create_message(self, chatroom_id, user_id, message_text):
         sql_command = ("INSERT INTO message_table (message_id, user_id, chatroom_id, message_text, created_date) VALUES  (DEFAULT, " + str(user_id) + ", " + str(chatroom_id) + ", '" + message_text + "', CURRENT_TIMESTAMP);")
+        try:
+            self.cursor.execute(sql_command)
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            return -1; 
+        return 0; 
+
+    # CHATROOM TABLE - FETCH 
+
+    def fetch_chatroom(self):
+        sql_command = ("SELECT chatroom_id, chatroom_name FROM chatroom_table;")
         self.cursor.execute(sql_command)
-        self.connection.commit()
+        data = self.cursor.fetchall()
+        return data    
+
+    # CHATROOM TABLE - CREATE CHATROOM
+
+    def create_chatroom(self, chatroom_name):
+        sql_command = ("INSERT INTO chatroom_table (chatroom_id, chatroom_name, created_date) VALUES  (DEFAULT, '" + chatroom_name + "', CURRENT_TIMESTAMP);")
+        try:
+            self.cursor.execute(sql_command)
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            return -1; 
+        return 0; 
+
 
 
