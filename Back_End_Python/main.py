@@ -10,8 +10,6 @@ if __name__ == '__main__':
     con.estublish_connection()
     con.estublish_cursor()
 
-    con.get_next_message_id()
-
     con.close_cursor()
     con.close_connection()
 
