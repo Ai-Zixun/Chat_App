@@ -15,3 +15,13 @@
     margin-left: 1vmin;
     width: 40vmin;
 }
+
+.Text {
+    margin-top: 1vmin;
+    font-size: 2vmin;
+    color: gray;
+}
+
+#Link {
+    color: blue;
+}

@@ -1,5 +1,8 @@
-import React, { useState, createRef } from 'react';
+import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import axios from 'axios';
+import API from '../API/API';
+import validator from 'validator'; 
 import SingupAlert from '../SignupAlert/SignupAlert'
 import logo from '../logo.svg';
 import './CreateAccount.css';
@@ -11,8 +14,38 @@ const CreateAccount = props => {
     const [passwordReenter, setPasswordReenter] = useState('');
     const [email, setEmail] = useState('');
 
-    const buttonClickHandler = () => {
-        console.log(username)
+    const buttonClickHandler = async () => {
+        console.log("Clicked");
+        
+        let usernameResponse = await axios.get(API.API_URL + '/api/user_exist', { params: { user_name: username } });
+        if (!validator.matches(username, /^[a-zA-Z0-9]{1,10}$/)) {
+            setAlert("username-format"); 
+        } 
+        else if (usernameResponse.data.exist) {
+            setAlert("user-exist");
+        } 
+        else if (!validator.matches(password, /^[a-zA-Z0-9]{5,15}$/)) {
+            setAlert("password-format"); 
+        } 
+        else if (passwordReenter !== password) {
+            setAlert("password-not-match"); 
+        } 
+        else if (!validator.isEmail(email)) {
+            setAlert("email-format"); 
+        } 
+        else {
+            let createResponse = await axios.get(API.API_URL + '/api/create_user', { params: { user_name: username, user_password: password  } });
+            if (! createResponse.data.success) {
+                setAlert("syste-error");
+            }
+            else {
+                setAlert("null");
+                let id = createResponse.data.user_id;
+                console.log(id);
+                props.setID(id);
+                props.setPage("chatroom");
+            }
+        }
     }
 
     return (
@@ -23,14 +56,14 @@ const CreateAccount = props => {
                     <SingupAlert alert={alert} />
                     <Form.Group>
                         <Form.Control className="Signup-Form-Text" onChange={(event) => setUsername(event.target.value)} type="text" placeholder="Enter Username"/>
-                        <Form.Control className="Signup-Form-Text" type="password" placeholder="Enter Password" />
-                        <Form.Control className="Signup-Form-Text" type="password" placeholder="Confirm Password" />
-                        <Form.Control className="Signup-Form-Text" type="email" placeholder="Enter E-Mail" />
+                        <Form.Control className="Signup-Form-Text" onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Enter Password" />
+                        <Form.Control className="Signup-Form-Text" onChange={(event) => setPasswordReenter(event.target.value)} type="password" placeholder="Confirm Password" />
+                        <Form.Control className="Signup-Form-Text" onChange={(event) => setEmail(event.target.value)} type="email" placeholder="Enter E-Mail" />
                     </Form.Group>
-                    <Button onClick={() => {buttonClickHandler()}} className="Signup-Form-Button" variant="outline-success">
+                    <Button onClick={buttonClickHandler} className="Signup-Form-Button" variant="outline-success">
                         Sign Up
                     </Button>
-                    <p>Have an account? Sign In</p>
+                    <p className="Text">Have an account? <a id={"Link"} onClick={() => {props.setPage("login")}}>Sign In</a></p>
                 </Form>
             </header>
         </div>

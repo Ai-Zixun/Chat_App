@@ -1,22 +1,51 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import axios from 'axios';
+import API from '../API/API';
+import SingupAlert from '../SignupAlert/SignupAlert'
 import logo from '../logo.svg';
 import './Login.css';
 
-const login = (props) => {
+const Login = (props) => {
+    const [alert, setAlert] = useState("null");
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const buttonClickHandler = async () => {
+        console.log("Clicked");
+
+        let usernameResponse = await axios.get(API.API_URL + '/api/user_exist', { params: { user_name: username } });
+        if (! usernameResponse.data.exist) {
+            setAlert("user-not-exist");
+        } 
+        else {
+            let passwordResponse = await axios.get(API.API_URL + '/api/login', { params: { user_name: username, user_password: password } });
+            if (! passwordResponse.data.success) {
+                setAlert("password-wrong");
+            }
+            else {
+                setAlert("null");
+                let id = passwordResponse.data.user_id;
+                props.setID(id);
+                props.setPage("chatroom");
+            }
+        }
+    }
+
     return (
         <div className="App">
             <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" />
                 <Form className="Login-Form">
+                    <SingupAlert alert={alert} />
                     <Form.Group>
-                        <Form.Control className="Login-Form-Text" type="text" placeholder="Enter Username" />
-                        <Form.Control className="Login-Form-Text" type="password" placeholder="Enter Password" />
+                        <Form.Control className="Login-Form-Text" onChange={(event) => setUsername(event.target.value)} type="text" placeholder="Enter Username" />
+                        <Form.Control className="Login-Form-Text" onChange={(event) => setPassword(event.target.value)} type="password" placeholder="Enter Password" />
                     </Form.Group>
-                    <Button className="Login-Form-Button" variant="outline-success">
+                    <Button onClick={buttonClickHandler} className="Login-Form-Button" variant="outline-success">
                         Sign In
                     </Button>
-                    <Button className="Login-Form-Button" variant="outline-success">
+                    <Button onClick={() => {props.setPage("createAccount")}} className="Login-Form-Button" variant="outline-success">
                         Create Account
                     </Button>
                 </Form>
@@ -25,4 +54,4 @@ const login = (props) => {
     );
 };
 
-export default login;
+export default Login;

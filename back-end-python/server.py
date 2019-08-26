@@ -50,6 +50,10 @@ def user_exist():
         return {
             "exist": True
         }
+    else : 
+        return {
+            "exist": False
+        }
 
 @app.route('/api/create_user')
 def create_user():
