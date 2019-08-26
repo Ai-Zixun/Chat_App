@@ -41,6 +41,16 @@ def login():
         "success": False
     }
 
+@app.route('/api/user_exist')
+def user_exist():
+    user_name = request.args.get('user_name')
+    if (user_name == None):
+        abort(400)
+    if (connection.check_user_exit_via_user_name(user_name)):
+        return {
+            "exist": True
+        }
+
 @app.route('/api/create_user')
 def create_user():
     user_name = request.args.get('user_name')
