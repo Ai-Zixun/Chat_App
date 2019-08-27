@@ -88,7 +88,10 @@ class DBConnection:
     # MESSAGE TABLE - FETCH 
 
     def fetch_message_via_chatroom_id(self, chatroom_id):
-        sql_command = ("SELECT message_id, user_id, message_text, created_date FROM message_table WHERE chatroom_id = " + str(chatroom_id) + ";")
+        sql_command =  "SELECT message_id, user_name, message_text, message_table.created_date "
+        sql_command += "FROM message_table, user_table "
+        sql_command += "WHERE chatroom_id = " + str(chatroom_id) + " AND user_table.user_id = message_table.user_id "
+        sql_command += "ORDER BY message_id ASC;"
         self.cursor.execute(sql_command)
         data = self.cursor.fetchall()
         return data       

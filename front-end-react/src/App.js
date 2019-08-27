@@ -6,12 +6,12 @@ import CreateAccount from './CreateAccount/CreateAccount'
 import Chatroom from './Chatroom/Chatroom'
 
 function App() {
-    const [page, setPage] = useState("login");
+    const [page, setPage] = useState("chatroom");
     const [id, setID] = useState(-1);
 
     const getPageHandler = () => {
         switch (page) {
-            case "setPage":
+            case "login":
                 return <Login setPage={setPage} setID={setID}/>;
             case "createAccount":
                 return <CreateAccount setPage={setPage} setID={setID}/>;

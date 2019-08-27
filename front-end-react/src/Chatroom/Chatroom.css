@@ -1,0 +1,97 @@
+.Chatroom {
+    background-color: #EAFEEA;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: black;
+}
+
+.Top {
+    height: 10vh;
+}
+
+.TopLeft{
+    background-color: #5cb85c;
+    border-style: solid;
+    border-color: #DCDCDC;
+    border-width: 0px 1px 1px 1px;
+    text-align: center;
+}
+
+.TopRight{
+    background-color: #5cb85c;
+    border-style: solid;
+    border-color: #DCDCDC;
+    border-width: 0px 1px 1px 0px;
+    text-align: center;
+}
+
+.Bottom {
+    height: 90vh;
+}
+
+.BottomLeft {
+    background-color: white;
+    border-style: solid;
+    border-color: #DCDCDC;
+    border-width: 0px 1px 0px 1px;
+}
+
+
+.BottomRight {
+    background-color: white;
+    height: 90vh;
+    border-style: solid;
+    border-color: #DCDCDC;
+    border-width: 0px 1px 0px 0px;
+    padding: 0%;
+}
+
+.Textbox {
+    height: 80vh;
+    border-style: solid;
+    border-color: #DCDCDC;
+    border-width: 0px 0px 1px 0px;
+}
+
+.TextInput {
+    background-color: white;
+    height: 10vh;
+    max-height: 10vh;
+    vertical-align: bottom;
+}
+
+.Input {
+    padding-top: 1.25vh;
+    height: 7.5vh;
+    max-height: 7.5vh;
+}
+
+/* 
+45DF00 
+74FF7C
+CBFFB4
+*/
+
+.TopLeftText {
+    margin: 2.5vh;
+    color: #FFFFFF;
+}
+
+.TopRightText {
+    margin: 2.5vh;
+    color: #FFFFFF;
+}
+
+.Tag {
+    font-size: 20px;
+    font-style: normal;
+}
+
+.TagSelected {
+    font-size: 30px;
+    font-style: normal;
+}

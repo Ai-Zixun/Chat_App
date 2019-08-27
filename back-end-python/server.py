@@ -77,3 +77,12 @@ def chatroom_list():
     for room in data: 
         result.append({"chatroom_id": room[0], "chatroom_name": room[1]})
     return jsonify(result)
+
+@app.route('/api/chatroom_messages')
+def chatroom_messages():
+    chatroom_id = request.args.get('chatroom_id')
+    data = connection.fetch_message_via_chatroom_id(chatroom_id)
+    result = []
+    for message in data: 
+        result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3]})
+    return jsonify(result)
