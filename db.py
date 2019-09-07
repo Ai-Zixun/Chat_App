@@ -93,8 +93,8 @@ class DBConnection:
             self.connection.commit()
         except:
             self.connection.rollback()
-            return -1; 
-        return 0; 
+            return -1
+        return 0
 
     # MESSAGE TABLE - FETCH 
 
@@ -116,8 +116,8 @@ class DBConnection:
             self.connection.commit()
         except:
             self.connection.rollback()
-            return -1; 
-        return 0; 
+            return -1
+        return 0
     
     # CHATROOM TABLE - FETCH 
 
