@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Container, InputGroup, FormControl, Button} from 'react-bootstrap';
+import { Row, Col, Container, InputGroup, FormControl, Button, ButtonToolbar } from 'react-bootstrap';
 import axios from 'axios';
 import API from '../API/API';
+import CreateChatroom from '../CreateChatroom/CreateChatroom';
 import './Chatroom.css';
-import { strict } from 'assert';
 
 const Chatroom = props => {
     // Something Must be wrong here, I shouldn't need to do this. 
@@ -15,13 +15,23 @@ const Chatroom = props => {
     // ------ CHATROOM TAGS ------
     const [rooms, setRooms] = useState([]);
     const [messages, setMessages] = useState([]);
+    const [username, setUsername] = useState("");
+    const [createChatrooModalShow, setCreateChatroomModalShow] = React.useState(false);
 
-    useEffect(() => {
+    const loadUsername = () => {
+        axios.get(API.API_URL + '/api/user_by_id', { params: { user_id: props.id } }).then(response => {
+            setUsername(response.data.username);
+            console.log(username);
+        });
+    }
+
+    useEffect(async () => {
+        await loadUsername();
         axios.get(API.API_URL + '/api/chatroom_list').then(response => {
             let room = response.data[0];
             setRooms(response.data);
             axios.get(API.API_URL + '/api/chatroom_messages', { params: { chatroom_id: room.chatroom_id } }).then(response => {
-                setMessages(response.data)
+                setMessages(response.data);
             });
         });
     }, []);
@@ -86,11 +96,32 @@ const Chatroom = props => {
     const displayMessageList = () => {
         let result = [];
         messages.forEach((message) => {
-            result.push(
-                <div>
-                    <p className="Message">{message.message}</p>
-                </div>
-            );
+            if (message.user_name === username) {
+                result.push(
+                    <div className="FromUser">
+                        <div>
+                            <span className="MessageUser">{message.user_name}</span>
+                            <span className="MessageDate">{message.created_date}</span>
+                        </div>
+                        <div>
+                            <span className="MessageTextUser">{message.message}</span>
+                        </div>
+                    </div>
+                );
+            }
+            else {
+                result.push(
+                    <div>
+                        <div>
+                            <span className="MessageUser">{message.user_name}</span>
+                            <span className="MessageDate">{message.created_date}</span>
+                        </div>
+                        <div>
+                            <span className="MessageTextOther">{message.message}</span>
+                        </div>
+                    </div>
+                );
+            }
         });
         return result;
     }
@@ -103,17 +134,28 @@ const Chatroom = props => {
                     <Col xs={4} className="TopLeft">
                         <p className="TopLeftText">Chatrooms</p>
                     </Col>
-                    <Col xs={8} className="TopRight">
+                    <Col xs={2} className="TopRightEmpty">
+                    </Col>
+                    <Col xs={4} className="TopRightLabel">
                         <p className="TopRightText">{getCurrentRoom()}</p>
+                    </Col>
+                    <Col xs={2} className="TopRightRight">
+                        <p className="TopRightSignedIn">Signed in as: {username}</p>
+                        <Button className="TopRightButton" variant="light">Sign out</Button>
                     </Col>
                 </Row>
                 <Row className="Bottom">
                     <Col xs={4} className="BottomLeft">
                         {chatroomTags()}
-                        <Button variant="outline-success">New Chatroom</Button>
+                        <ButtonToolbar>
+                            <Button variant="outline-success" onClick={() => setCreateChatroomModalShow(true)}>
+                                New Chatroom
+                            </Button>
+                            <CreateChatroom setRoom={roomClickHandler} show={createChatrooModalShow} onHide={() => setCreateChatroomModalShow(false)}/>
+                        </ButtonToolbar>
                     </Col>
                     <Col xs={8} className="BottomRight">
-                        <div className="Textbox">
+                        <div className="Textbox" id="DisplayedMessage">
                             {displayMessageList()}
                         </div>
                         <div className="TextInput">

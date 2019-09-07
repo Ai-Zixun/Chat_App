@@ -21,12 +21,38 @@
     text-align: center;
 }
 
-.TopRight{
+.TopRightEmpty {
     background-color: #5cb85c;
     border-style: solid;
     border-color: #DCDCDC;
-    border-width: 0px 1px 1px 0px;
+    border-width: 0px 0px 1px 0px;
     text-align: center;
+}
+
+.TopRightLabel {
+    background-color: #5cb85c;
+    border-style: solid;
+    border-color: #DCDCDC;
+    border-width: 0px 0px 1px 0px;
+    text-align: center;
+}
+
+.TopRightRight {
+    background-color: #5cb85c;
+    border-style: solid;
+    border-color: #DCDCDC;
+    border-width: 0px 0px 1px 0px;
+    text-align: center;
+}
+
+.TopRightSignedIn {
+    margin: 1vh; 
+    color: #FFFFFF;
+    font-size: 1vh;
+}
+
+.TopRightButton {
+    font-size: 1vh;
 }
 
 .Bottom {
@@ -38,6 +64,8 @@
     border-style: solid;
     border-color: #DCDCDC;
     border-width: 0px 1px 0px 1px;
+    overflow: scroll;
+    max-height: 90vh;
 }
 
 
@@ -55,6 +83,7 @@
     border-style: solid;
     border-color: #DCDCDC;
     border-width: 0px 0px 1px 0px;
+    overflow-y: auto;
 }
 
 .TextInput {
@@ -82,7 +111,7 @@ CBFFB4
 }
 
 .TopRightText {
-    margin: 2.5vh;
+    margin: 2.5vh; 
     color: #FFFFFF;
 }
 
@@ -94,4 +123,37 @@ CBFFB4
 .TagSelected {
     font-size: 30px;
     font-style: normal;
+}
+
+.MessageUser {
+    font-size: 2vh;
+    font-weight: 800;
+    padding: 0vh 0vh 0vh 1vh;
+    margin: 0vh 0vh 0vh 0vh;
+}
+
+.MessageDate {
+    font-size: 1vh;
+    font-weight: 400;
+    padding: 0vh 0vh 0vh 1vh;
+    margin: 0vh 0vh 0vh 0vh;
+}
+
+.MessageTextUser {
+    font-size: 2vh;
+    padding: 0vh 0vh 0vh 1vh;
+    margin: 0vh 0vh 0vh 0vh;
+    /* background: #5cb85c; */
+}
+
+.MessageTextOther {
+    font-size: 2vh;
+    padding: 0vh 0vh 0vh 1vh;
+    margin: 0vh 0vh 0vh 0vh;
+    /* background: #DCDCDC;  */
+}
+
+.FromUser {
+    text-align: right;
+    padding: 0vh 1vh 0vh 0vh;
 }

@@ -60,6 +60,15 @@ class DBConnection:
         self.cursor.execute(sql_command)
         data = self.cursor.fetchall()
         return data[0][0]
+    
+    def fetch_user_name_via_user_id(self, user_id):
+        data = []
+        while (data == []):
+            sql_command = ("SELECT user_name FROM user_table WHERE user_id = " + user_id + ";")
+            self.cursor.execute(sql_command)
+            data = self.cursor.fetchall()
+            print("USER NAME VIA ID: " + str(data))
+        return data[0][0]
 
     def check_user_exit_via_user_name(self, user_name): 
         sql_command = ("SELECT COUNT(1) FROM user_table WHERE user_name = \'" + user_name + "\';")
@@ -68,9 +77,11 @@ class DBConnection:
         return (int(data[0][0]) >= 1) 
     
     def fetch_user_password_via_user_id(self, user_id): 
-        sql_command = ("SELECT user_password FROM user_table WHERE user_id = " + str(user_id) + ";")
-        self.cursor.execute(sql_command)
-        data = self.cursor.fetchall()
+        data = []
+        while (data == []):
+            sql_command = ("SELECT user_password FROM user_table WHERE user_id = " + str(user_id) + ";")
+            self.cursor.execute(sql_command)
+            data = self.cursor.fetchall()
         return data[0][0]  
 
     # USER TABLE - CREATE  
@@ -107,26 +118,40 @@ class DBConnection:
             self.connection.rollback()
             return -1; 
         return 0; 
-
+    
     # CHATROOM TABLE - FETCH 
 
     def fetch_chatroom(self):
-        sql_command = ("SELECT chatroom_id, chatroom_name FROM chatroom_table;")
-        self.cursor.execute(sql_command)
-        data = self.cursor.fetchall()
+        data = []
+        while (data == []):
+            sql_command = ("SELECT chatroom_id, chatroom_name FROM chatroom_table;")
+            self.cursor.execute(sql_command)
+            data = self.cursor.fetchall()
         return data    
 
+    def check_chatroom_exit_via_chatroom_name(self, chatroom_name): 
+        sql_command = ("SELECT COUNT(1) FROM chatroom_table WHERE chatroom_name = \'" + chatroom_name + "\';")
+        self.cursor.execute(sql_command)
+        data = self.cursor.fetchall()
+        return (int(data[0][0]) >= 1) 
+
     # CHATROOM TABLE - CREATE CHATROOM
+
+    def chatroom_get_chatroom_id_via_chatroom_name(self, chatroom_name):
+        sql_command = ("SELECT chatroom_id FROM chatroom_table WHERE chatroom_name = \'" + chatroom_name + "\';")
+        self.cursor.execute(sql_command)
+        data = self.cursor.fetchall()
+        return data[0][0]
 
     def create_chatroom(self, chatroom_name):
         sql_command = ("INSERT INTO chatroom_table (chatroom_id, chatroom_name, created_date) VALUES  (DEFAULT, '" + chatroom_name + "', CURRENT_TIMESTAMP);")
         try:
             self.cursor.execute(sql_command)
             self.connection.commit()
+            return self.chatroom_get_chatroom_id_via_chatroom_name(chatroom_name)
         except:
             self.connection.rollback()
-            return -1; 
-        return 0; 
+        return -1
 
 
 
