@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import socketIOClient from 'socket.io-client';
 import { Row, Col, Container, InputGroup, FormControl, Button, ButtonToolbar } from 'react-bootstrap';
 import axios from 'axios';
 import API from '../API/API';
@@ -10,26 +11,36 @@ const Chatroom = props => {
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
     //////////////////////////////////////////////////////////////////
+    const socket = socketIOClient(API.API_URL);
+    
+    socket.on('connect', () => {
+        console.log('connected')
+        socket.emit('client_transmission', {
+            connection: 'Connection Estublished'
+        })
+    })
 
+    socket.on('server_message', (data) => {
+        console.log("Receive Socket DATA");
+        console.log(data);
+    })
 
     // ------ CHATROOM TAGS ------
     const [text, setText] = useState("");
     const [rooms, setRooms] = useState([]);
-    const [messages, setMessages] = useState([]);
+
     const [username, setUsername] = useState("");
     const [createChatrooModalShow, setCreateChatroomModalShow] = React.useState(false);
+
+    const [messages, setMessages] = useState([]);
+    //const messages = props.messages;
+    //const setMessages = props.setMessages; 
 
     const loadUsername = () => {
         axios.get(API.API_URL + '/api/user_by_id', { params: { user_id: props.id } }).then(response => {
             setUsername(response.data.username);
             console.log(username);
         });
-    }
-
-    const appendMessages = (newMessage) => {
-        let temp = messages;
-        temp.push(newMessage);
-        setMessages(temp); 
     }
 
     useEffect(async () => {
@@ -43,8 +54,7 @@ const Chatroom = props => {
         });
     }, []);
 
-    props.socket.on('server_message', (data) => {
-        console.log("Receive Socket DATA");
+    
         /*
         console.log(data);
         console.log(data.type == 'message');
@@ -65,7 +75,7 @@ const Chatroom = props => {
         }
     
         */
-    })
+    
 
     const roomClickHandler = (chatroom_id) => {
         let modifiedRooms = rooms;

@@ -8,36 +8,32 @@ import Chatroom from './Chatroom/Chatroom'
 import API from './API/API';
 
 function App() {
+    // Global Data 
     const [page, setPage] = useState("chatroom");
     const [id, setID] = useState(0);
-    const socket = socketIOClient(API.API_URL);
+    
 
-    useEffect(() => {
-        socket.on('connect', () => {
-            console.log('connected')
-            socket.emit('client_transmission', {
-                connection: 'Connection Estublished'
-            })
-        })
+    // Chatroom Data 
+    const [messages, setMessages] = useState([]);
 
-        /*
-        socket.on('server_message', (data) => {
-            console.log("Receive Socket DATA");
-        })
-        */
 
-    }, []);
 
     const getPageHandler = () => {
         switch (page) {
             case "login":
-                return <Login socket={socket} setPage={setPage} setID={setID} />;
+                return <Login setPage={setPage} setID={setID} />;
             case "createAccount":
-                return <CreateAccount socket={socket} setPage={setPage} setID={setID} />;
+                return <CreateAccount setPage={setPage} setID={setID} />;
             case "chatroom":
-                return <Chatroom socket={socket} setPage={setPage} id={id} setID={setID} />;
+                return <Chatroom 
+                    setPage={setPage} 
+                    id={id} 
+                    setID={setID} 
+                    messages={messages}
+                    setMessages={setMessages}
+                />;
             default:
-                return <Login socket={socket} setPage={setPage} setID={setID} />;
+                return <Login setPage={setPage} setID={setID} />;
         }
     }
 
