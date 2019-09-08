@@ -67,7 +67,6 @@ class DBConnection:
             sql_command = ("SELECT user_name FROM user_table WHERE user_id = " + user_id + ";")
             self.cursor.execute(sql_command)
             data = self.cursor.fetchall()
-            print("USER NAME VIA ID: " + str(data))
         return data[0][0]
 
     def check_user_exit_via_user_name(self, user_name): 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+
 import { Row, Col, Container, InputGroup, FormControl, Button, ButtonToolbar } from 'react-bootstrap';
 import axios from 'axios';
 import API from '../API/API';
@@ -13,6 +14,7 @@ const Chatroom = props => {
 
 
     // ------ CHATROOM TAGS ------
+    let text = ""; 
     const [rooms, setRooms] = useState([]);
     const [messages, setMessages] = useState([]);
     const [username, setUsername] = useState("");
@@ -92,6 +94,17 @@ const Chatroom = props => {
         }
     }
 
+    // ----!!!!!! CURRENT WORKING PART !!!! 
+    const sendMessageHandler = (event) => {
+        event.preventDefault();
+        props.socket.emit('client_transmission', {
+            type: 'message',
+            user_id: props.id,
+            chatroom_id: rooms[0].chatroom_id,
+            message: text
+        })
+    }
+
     // ------ CHATROOM BOX ------
     const displayMessageList = () => {
         let result = [];
@@ -163,11 +176,11 @@ const Chatroom = props => {
                                 <FormControl
                                     className="Input"
                                     placeholder="Message"
-                                    aria-label="Recipient's username"
                                     aria-describedby="basic-addon2"
+                                    onChange={(event) => {text = event.target.value;}}
                                 />
                                 <InputGroup.Append>
-                                    <Button variant="outline-success">Send</Button>
+                                    <Button variant="outline-success" onClick={sendMessageHandler}>Send</Button>
                                 </InputGroup.Append>
                             </InputGroup>
                         </div>

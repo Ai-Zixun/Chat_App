@@ -24,6 +24,7 @@ app = Flask(__name__, static_folder='react/build/')
 app.config['SECRET_KEY'] = 'mysecretkey'
 socketio = SocketIO(app)
 
+# Static Files (React Build)
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
@@ -31,9 +32,6 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
-
-def transmission_received(methods=['GET', 'POST']):
-    print('Client received transmission')
 
 # API
 @app.route('/api/login')
@@ -71,7 +69,6 @@ def user_by_id():
     user_id = request.args.get('user_id')
     if (user_id == None):
         abort(400)
-    print("USER BY ID - REQUEST " + str(user_id))
     username = connection.fetch_user_name_via_user_id(user_id)
     return {
         "username": username
@@ -134,9 +131,13 @@ def chatroom_messages():
         result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3]})
     return jsonify(result)
 
+# ---- SOCKET IO PART ---- 
+def transmission_received(methods=['GET', 'POST']):
+    print('\n ----- \n Client received transmission')
+
 @socketio.on('client_transmission')
 def handle_my_custom_event(json, methods=['GET', 'POST']):
-    print('received client transmission: ' + str(json))
+    print('\n ----- \n received client transmission: ' + str(json))
     socketio.emit('server_transmission', json, callback=transmission_received)
 
 if __name__ == '__main__':
