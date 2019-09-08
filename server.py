@@ -149,6 +149,8 @@ def handle_client_message(json, methods=['GET', 'POST']):
     chatroom_id = json['chatroom_id']
     message = json['message'] 
 
+    connection.create_message(chatroom_id, user_id, message)
+
     print('\t User ID: ' + str(user_id) + ' ' + str(type(user_id)))
     print('\t User Name: ' + str(user_name) + ' ' + str(type(user_name)))
     print('\t Room ID: ' + str(chatroom_id) + ' ' + str(type(chatroom_id)))

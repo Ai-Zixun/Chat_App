@@ -12,10 +12,37 @@ function App() {
     const [page, setPage] = useState("chatroom");
     const [id, setID] = useState(0);
     
+    // Something Must be wrong here, I shouldn't need to do this. 
+    const [, updateState] = React.useState();
+    const forceUpdate = React.useCallback(() => updateState({}), []);
+    //////////////////////////////////////////////////////////////////
 
-    // Chatroom Data 
     const [messages, setMessages] = useState([]);
 
+    const socket = socketIOClient(API.API_URL);
+    
+    socket.on('connect', () => {
+        console.log('connected')
+        socket.emit('client_transmission', {
+            connection: 'Connection Estublished'
+        })
+    })
+
+    socket.on('server_message', (data) => {
+        console.log("Receive Socket DATA");
+        /*
+        console.log(data);
+        console.log(messages);
+        let newMessage = messages;
+        newMessage.push({
+            created_date: null,
+            message: data.message,
+            user_name: data.user_name
+        });
+        setMessages(newMessage);
+        forceUpdate();
+        */ 
+    })
 
 
     const getPageHandler = () => {
@@ -26,6 +53,7 @@ function App() {
                 return <CreateAccount setPage={setPage} setID={setID} />;
             case "chatroom":
                 return <Chatroom 
+                    socket={socket}
                     setPage={setPage} 
                     id={id} 
                     setID={setID} 

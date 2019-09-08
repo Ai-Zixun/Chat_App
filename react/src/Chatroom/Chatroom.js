@@ -11,19 +11,6 @@ const Chatroom = props => {
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
     //////////////////////////////////////////////////////////////////
-    const socket = socketIOClient(API.API_URL);
-    
-    socket.on('connect', () => {
-        console.log('connected')
-        socket.emit('client_transmission', {
-            connection: 'Connection Estublished'
-        })
-    })
-
-    socket.on('server_message', (data) => {
-        console.log("Receive Socket DATA");
-        console.log(data);
-    })
 
     // ------ CHATROOM TAGS ------
     const [text, setText] = useState("");
@@ -32,14 +19,13 @@ const Chatroom = props => {
     const [username, setUsername] = useState("");
     const [createChatrooModalShow, setCreateChatroomModalShow] = React.useState(false);
 
-    const [messages, setMessages] = useState([]);
-    //const messages = props.messages;
-    //const setMessages = props.setMessages; 
+    //const [messages, setMessages] = useState([]);
+    const messages = props.messages;
+    const setMessages = props.setMessages; 
 
     const loadUsername = () => {
         axios.get(API.API_URL + '/api/user_by_id', { params: { user_id: props.id } }).then(response => {
             setUsername(response.data.username);
-            console.log(username);
         });
     }
 
