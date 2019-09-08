@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import { Row, Col, Container, InputGroup, FormControl, Button, ButtonToolbar } from 'react-bootstrap';
 import axios from 'axios';
 import API from '../API/API';
@@ -14,7 +13,7 @@ const Chatroom = props => {
 
 
     // ------ CHATROOM TAGS ------
-    let text = ""; 
+    const [text, setText] = useState("");
     const [rooms, setRooms] = useState([]);
     const [messages, setMessages] = useState([]);
     const [username, setUsername] = useState("");
@@ -27,6 +26,12 @@ const Chatroom = props => {
         });
     }
 
+    const appendMessages = (newMessage) => {
+        let temp = messages;
+        temp.push(newMessage);
+        setMessages(temp); 
+    }
+
     useEffect(async () => {
         await loadUsername();
         axios.get(API.API_URL + '/api/chatroom_list').then(response => {
@@ -37,6 +42,30 @@ const Chatroom = props => {
             });
         });
     }, []);
+
+    props.socket.on('server_message', (data) => {
+        console.log("Receive Socket DATA");
+        /*
+        console.log(data);
+        console.log(data.type == 'message');
+        console.log(data.chatroom_id);
+        console.log(rooms);// Issue 
+        let currentRoom = rooms[0];
+        //console.log(currentRoom.chatroom_id);// Issue 
+        console.log(messages);
+        if (data.type == 'message' && data.chatroom_id == rooms[0].chatroom_id){
+            console.log("true")
+            
+            newMessage.push({
+                user_name: data.user_name,
+                message: data.message,
+                created_date: null
+            });
+            
+        }
+    
+        */
+    })
 
     const roomClickHandler = (chatroom_id) => {
         let modifiedRooms = rooms;
@@ -94,15 +123,16 @@ const Chatroom = props => {
         }
     }
 
-    // ----!!!!!! CURRENT WORKING PART !!!! 
     const sendMessageHandler = (event) => {
         event.preventDefault();
-        props.socket.emit('client_transmission', {
+        props.socket.emit('client_message', {
             type: 'message',
             user_id: props.id,
+            user_name: username,
             chatroom_id: rooms[0].chatroom_id,
             message: text
         })
+        setText('');
     }
 
     // ------ CHATROOM BOX ------
@@ -177,7 +207,8 @@ const Chatroom = props => {
                                     className="Input"
                                     placeholder="Message"
                                     aria-describedby="basic-addon2"
-                                    onChange={(event) => {text = event.target.value;}}
+                                    value={text}
+                                    onChange={(event) => {setText(event.target.value);}}
                                 />
                                 <InputGroup.Append>
                                     <Button variant="outline-success" onClick={sendMessageHandler}>Send</Button>

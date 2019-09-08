@@ -140,5 +140,21 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
     print('\n ----- \n received client transmission: ' + str(json))
     socketio.emit('server_transmission', json, callback=transmission_received)
 
+@socketio.on('client_message')
+def handle_client_message(json, methods=['GET', 'POST']):
+    print('\n ----- \n received client message: ')
+    print(str(json))
+    user_id = json['user_id']
+    user_name = json['user_name'] 
+    chatroom_id = json['chatroom_id']
+    message = json['message'] 
+
+    print('\t User ID: ' + str(user_id) + ' ' + str(type(user_id)))
+    print('\t User Name: ' + str(user_name) + ' ' + str(type(user_name)))
+    print('\t Room ID: ' + str(chatroom_id) + ' ' + str(type(chatroom_id)))
+    print('\t Message: ' + str(message) + ' ' + str(type(message)))
+
+    socketio.emit('server_message', json, callback=transmission_received)
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)

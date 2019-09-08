@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import socketIOClient from 'socket.io-client'; 
+import socketIOClient from 'socket.io-client';
 import './App.css';
 
 import Login from './Login/Login'
@@ -14,27 +14,30 @@ function App() {
 
     useEffect(() => {
         socket.on('connect', () => {
+            console.log('connected')
             socket.emit('client_transmission', {
                 connection: 'Connection Estublished'
             })
         })
+
         /*
-        socket.emit('client_transmission', {
-            connection: 'Connection Estublished'
+        socket.on('server_message', (data) => {
+            console.log("Receive Socket DATA");
         })
         */
+
     }, []);
 
     const getPageHandler = () => {
         switch (page) {
             case "login":
-                return <Login socket={socket} setPage={setPage} setID={setID}/>;
+                return <Login socket={socket} setPage={setPage} setID={setID} />;
             case "createAccount":
-                return <CreateAccount socket={socket} setPage={setPage} setID={setID}/>;
+                return <CreateAccount socket={socket} setPage={setPage} setID={setID} />;
             case "chatroom":
-                return <Chatroom socket={socket} setPage={setPage} id={id} setID={setID}/>;
+                return <Chatroom socket={socket} setPage={setPage} id={id} setID={setID} />;
             default:
-                return <Login socket={socket} setPage={setPage} setID={setID}/>;
+                return <Login socket={socket} setPage={setPage} setID={setID} />;
         }
     }
 
