@@ -20,8 +20,17 @@ const Chatroom = props => {
     const [createChatrooModalShow, setCreateChatroomModalShow] = React.useState(false);
 
     //const [messages, setMessages] = useState([]);
-    const messages = props.messages;
-    const setMessages = props.setMessages; 
+    //const messages = props.messages;
+    //const setMessages = props.setMessages;
+    let messages = []
+    
+    
+
+    const pushMessages = (newMessage) => {
+        let temp = messages;
+        temp.push(newMessage);
+        //setMessages(temp);
+    }
 
     const loadUsername = () => {
         axios.get(API.API_URL + '/api/user_by_id', { params: { user_id: props.id } }).then(response => {
@@ -35,9 +44,33 @@ const Chatroom = props => {
             let room = response.data[0];
             setRooms(response.data);
             axios.get(API.API_URL + '/api/chatroom_messages', { params: { chatroom_id: room.chatroom_id } }).then(response => {
-                setMessages(response.data);
+                //setMessages(response.data);
+                messages = response.data; 
             });
         });
+
+        props.socket.on('connect', () => {
+            console.log('connected')
+            props.socket.emit('client_transmission', {
+                connection: 'Connection Estublished'
+            })
+        })
+    
+        props.socket.on('server_message', (data) => {
+            console.log("Receive Socket DATA");
+            console.log(data);
+            messages.push({
+                user_name: data.user_name,
+                message: data.message,
+                created_date: null
+            })
+            
+            console.log("After: ");
+            console.log(messages);
+            forceUpdate();
+            
+        })
+
     }, []);
 
     
@@ -73,7 +106,8 @@ const Chatroom = props => {
         }
         modifiedRooms.splice(0, 0, modifiedRooms.splice(index, 1)[0]);
         axios.get(API.API_URL + '/api/chatroom_messages', { params: { chatroom_id: modifiedRooms[0].chatroom_id } }).then(response => {
-            setMessages(response.data)
+            //setMessages(response.data)
+            messages = response.data; 
         });
         setRooms(modifiedRooms);
         forceUpdate();

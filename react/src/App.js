@@ -20,29 +20,40 @@ function App() {
     const [messages, setMessages] = useState([]);
 
     const socket = socketIOClient(API.API_URL);
-    
-    socket.on('connect', () => {
-        console.log('connected')
-        socket.emit('client_transmission', {
-            connection: 'Connection Estublished'
-        })
-    })
 
-    socket.on('server_message', (data) => {
-        console.log("Receive Socket DATA");
+    const pushMessages = (newMessage) => {
+        let temp = messages;
+        temp.push(newMessage);
+        setMessages(temp);
+    }
+
+    useEffect(() => {
         /*
-        console.log(data);
-        console.log(messages);
-        let newMessage = messages;
-        newMessage.push({
-            created_date: null,
-            message: data.message,
-            user_name: data.user_name
-        });
-        setMessages(newMessage);
-        forceUpdate();
-        */ 
-    })
+        socket.on('connect', () => {
+            console.log('connected')
+            socket.emit('client_transmission', {
+                connection: 'Connection Estublished'
+            })
+        })
+    
+        socket.on('server_message', (data) => {
+            console.log("Receive Socket DATA");
+            console.log(data);
+            console.log("Before: ");
+            console.log(messages);
+            pushMessages({
+                user_name: data.user_name,
+                message: data.message,
+                created_date: null
+            })
+            console.log("After: ");
+            console.log(messages);
+            forceUpdate();
+        })
+        */
+    }, []);
+    
+
 
 
     const getPageHandler = () => {
@@ -57,8 +68,6 @@ function App() {
                     setPage={setPage} 
                     id={id} 
                     setID={setID} 
-                    messages={messages}
-                    setMessages={setMessages}
                 />;
             default:
                 return <Login setPage={setPage} setID={setID} />;
