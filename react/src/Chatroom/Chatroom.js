@@ -15,22 +15,9 @@ const Chatroom = props => {
     // ------ CHATROOM TAGS ------
     const [text, setText] = useState("");
     const [rooms, setRooms] = useState([]);
-
+    const [messages, setMessages] = useState([]);
     const [username, setUsername] = useState("");
     const [createChatrooModalShow, setCreateChatroomModalShow] = React.useState(false);
-
-    //const [messages, setMessages] = useState([]);
-    //const messages = props.messages;
-    //const setMessages = props.setMessages;
-    let messages = []
-    
-    
-
-    const pushMessages = (newMessage) => {
-        let temp = messages;
-        temp.push(newMessage);
-        //setMessages(temp);
-    }
 
     const loadUsername = () => {
         axios.get(API.API_URL + '/api/user_by_id', { params: { user_id: props.id } }).then(response => {
@@ -43,9 +30,11 @@ const Chatroom = props => {
         axios.get(API.API_URL + '/api/chatroom_list').then(response => {
             let room = response.data[0];
             setRooms(response.data);
-            axios.get(API.API_URL + '/api/chatroom_messages', { params: { chatroom_id: room.chatroom_id } }).then(response => {
-                //setMessages(response.data);
-                messages = response.data; 
+            axios.get(API.API_URL + '/api/chatroom_messages', { params: { chatroom_id: room.chatroom_id } }).then(async response => {
+                setMessages(response.data);
+                
+                //messages = response.data; 
+                //forceUpdate();
             });
         });
 
@@ -59,42 +48,13 @@ const Chatroom = props => {
         props.socket.on('server_message', (data) => {
             console.log("Receive Socket DATA");
             console.log(data);
-            messages.push({
-                user_name: data.user_name,
-                message: data.message,
-                created_date: null
-            })
-            
-            console.log("After: ");
-            console.log(messages);
+            setMessages(data);
             forceUpdate();
             
         })
 
     }, []);
 
-    
-        /*
-        console.log(data);
-        console.log(data.type == 'message');
-        console.log(data.chatroom_id);
-        console.log(rooms);// Issue 
-        let currentRoom = rooms[0];
-        //console.log(currentRoom.chatroom_id);// Issue 
-        console.log(messages);
-        if (data.type == 'message' && data.chatroom_id == rooms[0].chatroom_id){
-            console.log("true")
-            
-            newMessage.push({
-                user_name: data.user_name,
-                message: data.message,
-                created_date: null
-            });
-            
-        }
-    
-        */
-    
 
     const roomClickHandler = (chatroom_id) => {
         let modifiedRooms = rooms;
@@ -106,8 +66,7 @@ const Chatroom = props => {
         }
         modifiedRooms.splice(0, 0, modifiedRooms.splice(index, 1)[0]);
         axios.get(API.API_URL + '/api/chatroom_messages', { params: { chatroom_id: modifiedRooms[0].chatroom_id } }).then(response => {
-            //setMessages(response.data)
-            messages = response.data; 
+            setMessages(response.data)
         });
         setRooms(modifiedRooms);
         forceUpdate();

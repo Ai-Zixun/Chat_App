@@ -156,7 +156,12 @@ def handle_client_message(json, methods=['GET', 'POST']):
     print('\t Room ID: ' + str(chatroom_id) + ' ' + str(type(chatroom_id)))
     print('\t Message: ' + str(message) + ' ' + str(type(message)))
 
-    socketio.emit('server_message', json, callback=transmission_received)
+    data = connection.fetch_message_via_chatroom_id(chatroom_id)
+    result = []
+    for message in data: 
+        result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3]})
+
+    socketio.emit('server_message', jsonify(result), callback=transmission_received)
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
