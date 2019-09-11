@@ -1,4 +1,5 @@
 import os
+import json
 
 from db import DBConnection 
 from const import * 
@@ -103,7 +104,7 @@ def chatroom_roomname_exist():
     chatroom_name = request.args.get('roomname')
     if (chatroom_name == None):
         abort(400)
-    if (connection.check_chatroom_exit_via_chatroom_name(chatroom_name)):
+    if (connection.check_chatroom_exist_via_chatroom_name(chatroom_name)):
         return {
             "exist": True
         }
@@ -121,7 +122,8 @@ def chatroom_create():
     return {
         "chatroom_id": chatroom_id
     }
-    
+
+"""     
 @app.route('/api/chatroom_messages')
 def chatroom_messages():
     chatroom_id = request.args.get('chatroom_id')
@@ -130,38 +132,65 @@ def chatroom_messages():
     for message in data: 
         result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3]})
     return jsonify(result)
+"""
+
+@app.route('/api/chatroom_messages_all')
+def chatroom_messages_all():
+    data = connection.fetch_message_all()
+    result = []
+    for message in data: 
+        result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3], "chatroom_id": message[4]})
+    return jsonify(result)
 
 # ---- SOCKET IO PART ---- 
-def transmission_received(methods=['GET', 'POST']):
-    print('\n ----- \n Client received transmission')
-
 @socketio.on('client_transmission')
 def handle_my_custom_event(json, methods=['GET', 'POST']):
     print('\n ----- \n received client transmission: ' + str(json))
-    socketio.emit('server_transmission', json, callback=transmission_received)
+    socketio.emit('server_transmission', json)
 
 @socketio.on('client_message')
-def handle_client_message(json, methods=['GET', 'POST']):
+def handle_client_message(transmission, methods=['GET', 'POST']):
     print('\n ----- \n received client message: ')
-    print(str(json))
-    user_id = json['user_id']
-    user_name = json['user_name'] 
-    chatroom_id = json['chatroom_id']
-    message = json['message'] 
+    print(transmission)
+    chatroom_id = transmission['chatroom_id']
+    connection.create_message(chatroom_id = chatroom_id, user_id = transmission['user_id'], message_text = transmission['message'])
+    
+    data = connection.fetch_message_all()
+    result = []
+    for message in data: 
+        result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3], "chatroom_id": message[4]})
 
-    connection.create_message(chatroom_id, user_id, message)
+    socketio.emit('server_update', json.dumps(result, indent=4, sort_keys=True, default=str))
 
-    print('\t User ID: ' + str(user_id) + ' ' + str(type(user_id)))
-    print('\t User Name: ' + str(user_name) + ' ' + str(type(user_name)))
-    print('\t Room ID: ' + str(chatroom_id) + ' ' + str(type(chatroom_id)))
-    print('\t Message: ' + str(message) + ' ' + str(type(message)))
+
+""" 
+    data = connection.fetch_message_via_chatroom_id(chatroom_id)
+    result = []
+    for message in data:
+        result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3]})
+
+    newResult = json.dumps(result, indent=4, sort_keys=True, default=str)
+    print(newResult)
+    socketio.emit('server_update', newResult, callback=transmission_received)
+"""
+
+@socketio.on('server_update')
+def handle_server_update(transmission, methods=['GET', 'POST']):
+    print('\n ----- \n received client message: ')
+    print(transmission)
+    chatroom_id = transmission['chatroom_id']
+    connection.create_message(chatroom_id = chatroom_id, user_id = transmission['user_id'], message_text = transmission['message'])
 
     data = connection.fetch_message_via_chatroom_id(chatroom_id)
     result = []
-    for message in data: 
+    for message in data:
         result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3]})
 
-    socketio.emit('server_message', jsonify(result), callback=transmission_received)
+    newResult = json.dumps(result, indent=4, sort_keys=True, default=str)
+    print(newResult)
+    socketio.emit('server_message', newResult)
+
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

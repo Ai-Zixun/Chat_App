@@ -27,32 +27,31 @@ const Chatroom = props => {
 
     useEffect(async () => {
         await loadUsername();
+        /*
         axios.get(API.API_URL + '/api/chatroom_list').then(response => {
             let room = response.data[0];
             setRooms(response.data);
             axios.get(API.API_URL + '/api/chatroom_messages', { params: { chatroom_id: room.chatroom_id } }).then(async response => {
                 setMessages(response.data);
-                
-                //messages = response.data; 
-                //forceUpdate();
+            });
+        });
+        */
+        axios.get(API.API_URL + '/api/chatroom_list').then(response => {
+            setRooms(response.data);
+            axios.get(API.API_URL + '/api/chatroom_messages_all').then(async response => {
+                setMessages(response.data);
             });
         });
 
         props.socket.on('connect', () => {
-            console.log('connected')
             props.socket.emit('client_transmission', {
                 connection: 'Connection Estublished'
             })
         })
-    
-        props.socket.on('server_message', (data) => {
-            console.log("Receive Socket DATA");
-            console.log(data);
-            setMessages(data);
-            forceUpdate();
-            
-        })
 
+        props.socket.on('server_update', (data) => {
+            setMessages(JSON.parse(data));
+        })
     }, []);
 
 
@@ -126,33 +125,40 @@ const Chatroom = props => {
 
     // ------ CHATROOM BOX ------
     const displayMessageList = () => {
+        if (rooms[0] === undefined) return null; 
+
+        console.log(messages);
+
+        let chatroomId = rooms[0].chatroom_id; 
         let result = [];
         messages.forEach((message) => {
-            if (message.user_name === username) {
-                result.push(
-                    <div className="FromUser">
-                        <div>
-                            <span className="MessageUser">{message.user_name}</span>
-                            <span className="MessageDate">{message.created_date}</span>
+            if (message.chatroom_id === chatroomId) {
+                if ( message.user_name === username) {
+                    result.push(
+                        <div className="FromUser">
+                            <div>
+                                <span className="MessageUser">{message.user_name}</span>
+                                <span className="MessageDate">{message.created_date}</span>
+                            </div>
+                            <div>
+                                <span className="MessageTextUser">{message.message}</span>
+                            </div>
                         </div>
+                    );
+                }
+                else {
+                    result.push(
                         <div>
-                            <span className="MessageTextUser">{message.message}</span>
+                            <div>
+                                <span className="MessageUser">{message.user_name}</span>
+                                <span className="MessageDate">{message.created_date}</span>
+                            </div>
+                            <div>
+                                <span className="MessageTextOther">{message.message}</span>
+                            </div>
                         </div>
-                    </div>
-                );
-            }
-            else {
-                result.push(
-                    <div>
-                        <div>
-                            <span className="MessageUser">{message.user_name}</span>
-                            <span className="MessageDate">{message.created_date}</span>
-                        </div>
-                        <div>
-                            <span className="MessageTextOther">{message.message}</span>
-                        </div>
-                    </div>
-                );
+                    );
+                }
             }
         });
         return result;
@@ -183,7 +189,7 @@ const Chatroom = props => {
                             <Button variant="outline-success" onClick={() => setCreateChatroomModalShow(true)}>
                                 New Chatroom
                             </Button>
-                            <CreateChatroom setRoom={roomClickHandler} show={createChatrooModalShow} onHide={() => setCreateChatroomModalShow(false)}/>
+                            <CreateChatroom setRoom={roomClickHandler} show={createChatrooModalShow} onHide={() => setCreateChatroomModalShow(false)} />
                         </ButtonToolbar>
                     </Col>
                     <Col xs={8} className="BottomRight">
@@ -197,7 +203,7 @@ const Chatroom = props => {
                                     placeholder="Message"
                                     aria-describedby="basic-addon2"
                                     value={text}
-                                    onChange={(event) => {setText(event.target.value);}}
+                                    onChange={(event) => { setText(event.target.value); }}
                                 />
                                 <InputGroup.Append>
                                     <Button variant="outline-success" onClick={sendMessageHandler}>Send</Button>

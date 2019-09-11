@@ -21,41 +21,6 @@ function App() {
 
     const socket = socketIOClient(API.API_URL);
 
-    const pushMessages = (newMessage) => {
-        let temp = messages;
-        temp.push(newMessage);
-        setMessages(temp);
-    }
-
-    useEffect(() => {
-        /*
-        socket.on('connect', () => {
-            console.log('connected')
-            socket.emit('client_transmission', {
-                connection: 'Connection Estublished'
-            })
-        })
-    
-        socket.on('server_message', (data) => {
-            console.log("Receive Socket DATA");
-            console.log(data);
-            console.log("Before: ");
-            console.log(messages);
-            pushMessages({
-                user_name: data.user_name,
-                message: data.message,
-                created_date: null
-            })
-            console.log("After: ");
-            console.log(messages);
-            forceUpdate();
-        })
-        */
-    }, []);
-    
-
-
-
     const getPageHandler = () => {
         switch (page) {
             case "login":

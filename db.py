@@ -69,7 +69,7 @@ class DBConnection:
             data = self.cursor.fetchall()
         return data[0][0]
 
-    def check_user_exit_via_user_name(self, user_name): 
+    def check_user_exist_via_user_name(self, user_name): 
         sql_command = ("SELECT COUNT(1) FROM user_table WHERE user_name = \'" + user_name + "\';")
         self.cursor.execute(sql_command)
         data = self.cursor.fetchall()
@@ -105,6 +105,15 @@ class DBConnection:
         self.cursor.execute(sql_command)
         data = self.cursor.fetchall()
         return data       
+    
+    def fetch_message_all(self):
+        sql_command =  "SELECT message_id, user_name, message_text, message_table.created_date, chatroom_id "
+        sql_command += "FROM message_table, user_table "
+        sql_command += "WHERE user_table.user_id = message_table.user_id "
+        sql_command += "ORDER BY message_id ASC;"
+        self.cursor.execute(sql_command)
+        data = self.cursor.fetchall()
+        return data       
 
     # MESSAGE TABLE - CREATE
 
@@ -128,7 +137,7 @@ class DBConnection:
             data = self.cursor.fetchall()
         return data    
 
-    def check_chatroom_exit_via_chatroom_name(self, chatroom_name): 
+    def check_chatroom_exist_via_chatroom_name(self, chatroom_name): 
         sql_command = ("SELECT COUNT(1) FROM chatroom_table WHERE chatroom_name = \'" + chatroom_name + "\';")
         self.cursor.execute(sql_command)
         data = self.cursor.fetchall()
