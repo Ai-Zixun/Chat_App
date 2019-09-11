@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import socketIOClient from 'socket.io-client';
 import { Row, Col, Container, InputGroup, FormControl, Button, ButtonToolbar } from 'react-bootstrap';
 import axios from 'axios';
 import API from '../API/API';
@@ -19,28 +18,17 @@ const Chatroom = props => {
     const [username, setUsername] = useState("");
     const [createChatrooModalShow, setCreateChatroomModalShow] = React.useState(false);
 
-    const loadUsername = () => {
+    useEffect(async () => {
         axios.get(API.API_URL + '/api/user_by_id', { params: { user_id: props.id } }).then(response => {
             setUsername(response.data.username);
         });
-    }
 
-    useEffect(async () => {
-        await loadUsername();
-        /*
         axios.get(API.API_URL + '/api/chatroom_list').then(response => {
-            let room = response.data[0];
-            setRooms(response.data);
-            axios.get(API.API_URL + '/api/chatroom_messages', { params: { chatroom_id: room.chatroom_id } }).then(async response => {
-                setMessages(response.data);
-            });
+            setRooms(response.data);  
         });
-        */
-        axios.get(API.API_URL + '/api/chatroom_list').then(response => {
-            setRooms(response.data);
-            axios.get(API.API_URL + '/api/chatroom_messages_all').then(async response => {
-                setMessages(response.data);
-            });
+
+        axios.get(API.API_URL + '/api/chatroom_messages_all').then(async response => {
+            setMessages(response.data);
         });
 
         props.socket.on('connect', () => {
@@ -52,7 +40,7 @@ const Chatroom = props => {
         props.socket.on('server_update', (data) => {
             setMessages(JSON.parse(data));
         })
-    }, []);
+    }, [props.id, props.socket]);
 
 
     const roomClickHandler = (chatroom_id) => {
@@ -179,7 +167,7 @@ const Chatroom = props => {
                     </Col>
                     <Col xs={2} className="TopRightRight">
                         <p className="TopRightSignedIn">Signed in as: {username}</p>
-                        <Button className="TopRightButton" variant="light">Sign out</Button>
+                        <Button className="TopRightButton" variant="light" onClick={() => {props.setPage("login");}}>Sign out</Button>
                     </Col>
                 </Row>
                 <Row className="Bottom">

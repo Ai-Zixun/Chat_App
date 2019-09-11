@@ -33,6 +33,9 @@ const SingupAlert = props => {
         case "syste-error":
             errorMessage = "Sorry, We are trying to fix our server";
             break; 
+        default: 
+            errorMessage = "Default Error Message";
+            break; 
     }
 
     return (

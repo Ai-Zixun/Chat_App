@@ -41,7 +41,7 @@ def login():
     user_password = request.args.get('user_password')
     if (user_name == None or user_password == None):
         abort(400)
-    if (connection.check_user_exit_via_user_name(user_name)):
+    if (connection.check_user_exist_via_user_name(user_name)):
         if (logic.check_password(connection, user_name, user_password)):
             return {
                 "success": True, 
@@ -56,7 +56,7 @@ def user_exist():
     user_name = request.args.get('user_name')
     if (user_name == None):
         abort(400)
-    if (connection.check_user_exit_via_user_name(user_name)):
+    if (connection.check_user_exist_via_user_name(user_name)):
         return {
             "exist": True
         }

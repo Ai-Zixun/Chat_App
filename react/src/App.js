@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import socketIOClient from 'socket.io-client';
 import './App.css';
 
@@ -8,17 +8,9 @@ import Chatroom from './Chatroom/Chatroom'
 import API from './API/API';
 
 function App() {
-    // Global Data 
     const [page, setPage] = useState("chatroom");
     const [id, setID] = useState(0);
     
-    // Something Must be wrong here, I shouldn't need to do this. 
-    const [, updateState] = React.useState();
-    const forceUpdate = React.useCallback(() => updateState({}), []);
-    //////////////////////////////////////////////////////////////////
-
-    const [messages, setMessages] = useState([]);
-
     const socket = socketIOClient(API.API_URL);
 
     const getPageHandler = () => {
