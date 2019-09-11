@@ -8,8 +8,8 @@ import Chatroom from './Chatroom/Chatroom'
 import API from './API/API';
 
 function App() {
-    const [page, setPage] = useState("chatroom");
-    const [id, setID] = useState(0);
+    const [page, setPage] = useState("login");
+    const [id, setID] = useState(-1);
     
     const socket = socketIOClient(API.API_URL);
 

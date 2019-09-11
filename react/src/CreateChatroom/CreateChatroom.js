@@ -5,7 +5,6 @@ import axios from 'axios';
 import API from '../API/API';
 
 const CreateChatroom = (props) => {
-
     let roomname = ""; 
     const [errorMessage, setErrorMessage] = useState("");
 

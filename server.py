@@ -140,7 +140,7 @@ def chatroom_messages_all():
     result = []
     for message in data: 
         result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3], "chatroom_id": message[4]})
-    return jsonify(result)
+    return json.dumps(result, indent=4, sort_keys=True, default=str)
 
 # ---- SOCKET IO PART ---- 
 @socketio.on('client_transmission')
@@ -148,49 +148,28 @@ def handle_my_custom_event(json, methods=['GET', 'POST']):
     print('\n ----- \n received client transmission: ' + str(json))
     socketio.emit('server_transmission', json)
 
+def emit_new_message_data():
+    data = connection.fetch_message_all()
+    result = []
+    for message in data: 
+        result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3], "chatroom_id": message[4]})
+    socketio.emit('server_update', json.dumps(result, indent=4, sort_keys=True, default=str))
+
 @socketio.on('client_message')
 def handle_client_message(transmission, methods=['GET', 'POST']):
     print('\n ----- \n received client message: ')
     print(transmission)
     chatroom_id = transmission['chatroom_id']
     connection.create_message(chatroom_id = chatroom_id, user_id = transmission['user_id'], message_text = transmission['message'])
-    
-    data = connection.fetch_message_all()
+    emit_new_message_data()
+
+@socketio.on('chatroom_list_update')
+def chatroom_list_update(transmission, methods=['GET', 'POST']):
+    data = connection.fetch_chatroom()
     result = []
-    for message in data: 
-        result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3], "chatroom_id": message[4]})
-
-    socketio.emit('server_update', json.dumps(result, indent=4, sort_keys=True, default=str))
-
-
-""" 
-    data = connection.fetch_message_via_chatroom_id(chatroom_id)
-    result = []
-    for message in data:
-        result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3]})
-
-    newResult = json.dumps(result, indent=4, sort_keys=True, default=str)
-    print(newResult)
-    socketio.emit('server_update', newResult, callback=transmission_received)
-"""
-
-@socketio.on('server_update')
-def handle_server_update(transmission, methods=['GET', 'POST']):
-    print('\n ----- \n received client message: ')
-    print(transmission)
-    chatroom_id = transmission['chatroom_id']
-    connection.create_message(chatroom_id = chatroom_id, user_id = transmission['user_id'], message_text = transmission['message'])
-
-    data = connection.fetch_message_via_chatroom_id(chatroom_id)
-    result = []
-    for message in data:
-        result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3]})
-
-    newResult = json.dumps(result, indent=4, sort_keys=True, default=str)
-    print(newResult)
-    socketio.emit('server_message', newResult)
-
-
+    for room in data: 
+        result.append({"chatroom_id": room[0], "chatroom_name": room[1]})
+    socketio.emit('chatroom_list_update_server', json.dumps(result, indent=4, sort_keys=True, default=str))
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

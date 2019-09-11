@@ -14,9 +14,10 @@ const Chatroom = props => {
     // ------ CHATROOM TAGS ------
     const [text, setText] = useState("");
     const [rooms, setRooms] = useState([]);
+    const [currentRoom, setCurrentRoom] = useState(1);
     const [messages, setMessages] = useState([]);
     const [username, setUsername] = useState("");
-    const [createChatrooModalShow, setCreateChatroomModalShow] = React.useState(false);
+    const [createChatrooModalShow, setCreateChatroomModalShow] = useState(false);
 
     useEffect(() => {
         axios.get(API.API_URL + '/api/user_by_id', { params: { user_id: props.id } }).then(response => {
@@ -40,43 +41,47 @@ const Chatroom = props => {
         props.socket.on('server_update', (data) => {
             setMessages(JSON.parse(data));
         })
+
+        props.socket.on('chatroom_list_update_server', (data) => {
+            setRooms(JSON.parse(data));
+        })
     }, [props.id, props.socket]);
 
 
     const roomClickHandler = (chatroom_id) => {
-        let modifiedRooms = rooms;
-        let index = -1;
-        for (let i = 0; i < modifiedRooms.length; i++) {
-            if (rooms[i].chatroom_id === chatroom_id) {
-                index = i;
-            }
-        }
-        modifiedRooms.splice(0, 0, modifiedRooms.splice(index, 1)[0]);
-        axios.get(API.API_URL + '/api/chatroom_messages', { params: { chatroom_id: modifiedRooms[0].chatroom_id } }).then(response => {
-            setMessages(response.data)
-        });
-        setRooms(modifiedRooms);
-        forceUpdate();
+        setCurrentRoom(chatroom_id);
     };
+
+    const newRoomHandler = (chatroom_id) => {
+        props.socket.emit('chatroom_list_update', {
+            type: 'chatroom_list_update'
+        })
+        setCurrentRoom(chatroom_id);
+    }; 
 
     const displayRoomList = () => {
         if (rooms.length >= 1) {
             let result = [];
-            result.push(
-                <div>
-                    <p className="TagSelected" onClick={() => roomClickHandler(rooms[0].chatroom_id)}>{rooms[0].chatroom_name}</p>
-                    <hr />
-                </div>
-            );
-            let nonCurrentRooms = rooms.slice(1, rooms.length);
-            nonCurrentRooms.forEach((room) => {
-                result.push(
-                    <div>
-                        <p className="Tag" onClick={() => roomClickHandler(room.chatroom_id)}>{room.chatroom_name}</p>
-                        <hr />
-                    </div>
-                );
+            rooms.forEach((room) => {
+                if (room.chatroom_id === currentRoom) {
+                    result.push(
+                        <div>
+                            <p className="TagSelected" onClick={() => roomClickHandler(room.chatroom_id)}>{room.chatroom_name}</p>
+                            <hr />
+                        </div>
+                    );
+                }
+                else {
+                    result.push(
+                        <div>
+                            <p className="Tag" onClick={() => roomClickHandler(room.chatroom_id)}>{room.chatroom_name}</p>
+                            <hr />
+                        </div>
+                    );
+                }
             });
+
+
             return result;
         }
     };
@@ -95,7 +100,13 @@ const Chatroom = props => {
             return null;
         }
         else {
-            return rooms[0].chatroom_name;
+            let result = "";
+            rooms.forEach((room) => {
+                if (room.chatroom_id === currentRoom){
+                    result = room.chatroom_name;
+                }
+            }); 
+            return result;
         }
     }
 
@@ -105,19 +116,20 @@ const Chatroom = props => {
             type: 'message',
             user_id: props.id,
             user_name: username,
-            chatroom_id: rooms[0].chatroom_id,
+            chatroom_id: currentRoom,
             message: text
         })
         setText('');
     }
 
+    const formatCreatedDate = (createdDate) => {
+        return createdDate.substring(0, 16); 
+    }
+
     // ------ CHATROOM BOX ------
     const displayMessageList = () => {
         if (rooms[0] === undefined) return null; 
-
-        console.log(messages);
-
-        let chatroomId = rooms[0].chatroom_id; 
+        let chatroomId = currentRoom; 
         let result = [];
         messages.forEach((message) => {
             if (message.chatroom_id === chatroomId) {
@@ -125,8 +137,8 @@ const Chatroom = props => {
                     result.push(
                         <div className="FromUser">
                             <div>
-                                <span className="MessageUser">{message.user_name}</span>
-                                <span className="MessageDate">{message.created_date}</span>
+                                <span className="MessageDate">{formatCreatedDate(message.created_date)}</span>
+                                <span className="MessageUser">{message.user_name}</span>                                
                             </div>
                             <div>
                                 <span className="MessageTextUser">{message.message}</span>
@@ -139,7 +151,7 @@ const Chatroom = props => {
                         <div>
                             <div>
                                 <span className="MessageUser">{message.user_name}</span>
-                                <span className="MessageDate">{message.created_date}</span>
+                                <span className="MessageDate">{formatCreatedDate(message.created_date)}</span>
                             </div>
                             <div>
                                 <span className="MessageTextOther">{message.message}</span>
@@ -177,7 +189,7 @@ const Chatroom = props => {
                             <Button variant="outline-success" onClick={() => setCreateChatroomModalShow(true)}>
                                 New Chatroom
                             </Button>
-                            <CreateChatroom setRoom={roomClickHandler} show={createChatrooModalShow} onHide={() => setCreateChatroomModalShow(false)} />
+                            <CreateChatroom setRoom={newRoomHandler} show={createChatrooModalShow} onHide={() => setCreateChatroomModalShow(false)} />
                         </ButtonToolbar>
                     </Col>
                     <Col xs={8} className="BottomRight">
