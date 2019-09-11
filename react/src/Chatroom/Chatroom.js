@@ -18,7 +18,7 @@ const Chatroom = props => {
     const [username, setUsername] = useState("");
     const [createChatrooModalShow, setCreateChatroomModalShow] = React.useState(false);
 
-    useEffect(async () => {
+    useEffect(() => {
         axios.get(API.API_URL + '/api/user_by_id', { params: { user_id: props.id } }).then(response => {
             setUsername(response.data.username);
         });
