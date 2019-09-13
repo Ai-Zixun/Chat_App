@@ -34,7 +34,7 @@ A personal project to learn the basic web technology with React for the front-en
 ## Instruction to Run Locally (via Docker)
 
 1. Make sure that your local environment has docker installed 
- 1. Please refer to the Docker documation on installation: https://docs.docker.com/install/ 
+    1. Please refer to the Docker documation on installation: https://docs.docker.com/install/ 
 2. Create your PostgreSQL database using the SQL commands provided in 
 ```
 ./others/note.sql
@@ -50,6 +50,8 @@ DB_PASSWORD = # Your PostgreSQL User Password
 JWT_SECRET_KEY = # Your JWT Secret Key to encode the verification token   
 
 ```
+4. Navigate `react` directory 
+
 4. Navigate to the project directory 
 5. Build Docker Image at the current directory 
 ```
@@ -59,7 +61,5 @@ docker image build -t chatapp .
 ```
 docker run chatapp
 ```
-...
-
 
 
