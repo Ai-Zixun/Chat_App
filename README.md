@@ -8,13 +8,15 @@ http://ai-zixun.com/chat-app
 #### Front-End: React.js; Bootstrap 4; HTML; CSS; Javascript 
 <p align="center">
   <img src="readme_img/icon-react.png" height="100" title="react">
+  <img src="readme_img/icon-bootstrap-4.png" height="100" title="python">
+  <img src="readme_img/icon-html-css-js.png" height="100" title="python">
 </p>
 
 #### Back-End: Python + Flask + Socket IO
 <p align="center">
-  <img src="readme_img/icon-python.png" height="100" title="python">
   <img src="readme_img/icon-flask.png" height="100" title="flask">
   <img src="readme_img/icon-socket-io.png" height="100" title="flask">
+  <img src="readme_img/icon-python.png" height="100" title="python">
 </p>
 
 #### Deployment: AWS Elastic Beanstalk + Docker 
