@@ -35,11 +35,12 @@ A personal project to learn the basic web technology with React for the front-en
 
 1. Make sure that your local environment has docker installed 
     1. Please refer to the Docker documation on installation: https://docs.docker.com/install/ 
-2. Create your PostgreSQL database using the SQL commands provided in 
+2. Set up the PostgreSQL Database 
+    1. Create your PostgreSQL database using the SQL commands provided in 
 ```
 ./others/note.sql
 ```
-3. Create a `const.py` file in the root directly with following information 
+    2. Create a `const.py` file in the root directly with following information 
 ```
 DB_HOST = # Your PostgreSQL Hosting Address
 DB_PORT = # Your PostgreSQL Hosting Port 
@@ -48,10 +49,11 @@ DB_USER = # Your PostgreSQL User Name
 DB_PASSWORD = # Your PostgreSQL User Password   
 
 JWT_SECRET_KEY = # Your JWT Secret Key to encode the verification token   
-
 ```
-4. Navigate `react` directory 
-
+3. Creat React Build Files 
+    1. Navigate `react` directory 
+    2. Run `npm install` to install all the required node modules 
+    3. Run `npm run build` to build the static react deployment files 
 4. Navigate to the project directory 
 5. Build Docker Image at the current directory 
 ```
