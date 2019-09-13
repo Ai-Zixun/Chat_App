@@ -115,6 +115,7 @@ const Chatroom = props => {
         props.socket.emit('client_message', {
             type: 'message',
             user_id: props.id,
+            token: window.localStorage.getItem('token'), 
             user_name: username,
             chatroom_id: currentRoom,
             message: text

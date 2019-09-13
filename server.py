@@ -170,8 +170,11 @@ def handle_client_message(transmission, methods=['GET', 'POST']):
     print('\n ----- \n received client message: ')
     print(transmission)
     chatroom_id = transmission['chatroom_id']
-    connection.create_message(chatroom_id = chatroom_id, user_id = transmission['user_id'], message_text = transmission['message'])
-    emit_new_message_data()
+    user_id = transmission['user_id']
+    token = transmission['token']
+    if (logic.validate_auth_toke(token, user_id)):
+        connection.create_message(chatroom_id = chatroom_id, user_id = user_id, message_text = transmission['message'])
+        emit_new_message_data()
 
 @socketio.on('chatroom_list_update')
 def chatroom_list_update(transmission, methods=['GET', 'POST']):

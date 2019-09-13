@@ -38,3 +38,6 @@ class Logic:
             print("TOKEN NOT VALID")
             return -1
 
+    def validate_auth_toke(self, token, id):
+        token_id = self.decode_auth_token(token)
+        return token_id == id
