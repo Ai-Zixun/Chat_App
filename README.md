@@ -3,8 +3,27 @@
 ## Deployment
 http://ai-zixun.com/chat-app
 
+## Web Technology Used in this project 
+
+#### Front-End: React.js; Bootstrap 4; HTML; CSS; Javascript 
+<p align="center">
+  <img src="readme_img/icon-react.png" height="100" title="react">
+</p>
+
+#### Back-End: Python + Flask + Socket IO
+<p align="center">
+  <img src="readme_img/icon-python.png" height="100" title="react">
+  <img src="readme_img/icon-flask.png" height="100" title="react">
+</p>
+
+#### Deployment: AWS Elastic Beanstalk + Docker 
+<p align="center">
+  <img src="readme_img/icon-eb.png" height="100" title="eb">
+</p>
+
+
 ## Overview 
-...
+A personal project to learn the basic web technology with React for the front-end development, Flask Python Server for the back-end development, and AWS Elastic Beanstalk and Docker for the final deployment. Using this project as an oppotunity to gain in-depth understanding of the Full-Stack Web Development.
 
 
 ## Instruction to Run Locally (via Docker)
@@ -23,17 +42,4 @@ docker run chatapp
 ...
 
 
-## Web Technology Used in this project 
-
-#### Front-End: React.js; Bootstrap 4; HTML; CSS; Javascript 
-<p align="center">
-  <img src="readme_img/react-icon.png" height="100" title="react">
-</p>
-
-#### Back-End: Python + Flask + Socket IO
-
-#### Deployment: AWS Elastic Beanstalk + Docker 
-<p align="center">
-  <img src="readme_img/eb-icon.png" height="100" title="eb">
-</p>
 
