@@ -12,11 +12,12 @@ http://ai-zixun.com/chat-app
   <img src="readme_img/icon-html-css-js.png" height="100" title="python">
 </p>
 
-#### Back-End: Python + Flask + Socket IO
+#### Back-End: Python + Flask + Socket IO + PostgreSQL 
 <p align="center">
   <img src="readme_img/icon-flask.png" height="100" title="flask">
   <img src="readme_img/icon-socket-io.png" height="100" title="flask">
   <img src="readme_img/icon-python.png" height="100" title="python">
+  <img src="readme_img/icon-postgresql.png" height="100" title="python">
 </p>
 
 #### Deployment: AWS Elastic Beanstalk + Docker 
@@ -34,12 +35,27 @@ A personal project to learn the basic web technology with React for the front-en
 
 1. Make sure that your local environment has docker installed 
  1. Please refer to the Docker documation on installation: https://docs.docker.com/install/ 
-2. Navigate to the project directory 
-3. Build Docker Image at the current directory 
+2. Create your PostgreSQL database using the SQL commands provided in 
+```
+./others/note.sql
+```
+3. Create a `const.py` file in the root directly with following information 
+```
+DB_HOST = # Your PostgreSQL Hosting Address
+DB_PORT = # Your PostgreSQL Hosting Port 
+DB_NAME = # Your PostgreSQL Name 
+DB_USER = # Your PostgreSQL User Name  
+DB_PASSWORD = # Your PostgreSQL User Password   
+
+JWT_SECRET_KEY = # Your JWT Secret Key to encode the verification token   
+
+```
+4. Navigate to the project directory 
+5. Build Docker Image at the current directory 
 ```
 docker image build -t chatapp .
 ```
-4. Execute the Docker image 
+6. Execute the Docker image 
 ```
 docker run chatapp
 ```
