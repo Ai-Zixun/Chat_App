@@ -164,6 +164,11 @@ const Chatroom = props => {
         return result;
     }
 
+    const signOutHandler = () => {
+        props.setPage("login");
+        window.localStorage.setItem('token', null);
+    }
+
     // ------ RETURN ------
     return (
         <div className="Chatroom">
@@ -179,7 +184,7 @@ const Chatroom = props => {
                     </Col>
                     <Col xs={2} className="TopRightRight">
                         <p className="TopRightSignedIn">Signed in as: {username}</p>
-                        <Button className="TopRightButton" variant="light" onClick={() => {props.setPage("login");}}>Sign out</Button>
+                        <Button className="TopRightButton" variant="light" onClick={signOutHandler}>Sign out</Button>
                     </Col>
                 </Row>
                 <Row className="Bottom">

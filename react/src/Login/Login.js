@@ -11,6 +11,37 @@ const Login = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const switchToChatroomWindow = (id) => {
+        props.setID(id);
+        props.setPage("chatroom");
+    }
+
+    const checkTokenData = async (token) => {
+        let userId = await axios.get(API.API_URL + '/api/token_data', { params: { token: token } });
+        return userId.data.id;
+    }
+
+    const checkToken = async () => {
+        let token = window.localStorage.getItem('token');
+        if (token === null){
+            console.log("GETTING NEW TOKEN AND LOG IN INFO"); 
+        }
+        else {
+            let tokenData = await checkTokenData(token); 
+            if (tokenData !== -1){
+                console.log("TOKEN IN SESSION");
+                switchToChatroomWindow(tokenData);  
+            } 
+            else {
+                console.log("TOKEN EXPIRED");
+            }
+        } 
+    }
+
+    React.useEffect(() => {
+        checkToken();
+    });
+
     const buttonClickHandler = async () => {
         console.log("Clicked");
 
@@ -26,6 +57,9 @@ const Login = (props) => {
             else {
                 setAlert("null");
                 let id = passwordResponse.data.user_id;
+                let token = passwordResponse.data.token; 
+                window.localStorage.setItem('id', id);
+                window.localStorage.setItem('token', token.substring(2, token.length - 1));
                 props.setID(id);
                 props.setPage("chatroom");
             }

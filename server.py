@@ -43,13 +43,23 @@ def login():
         abort(400)
     if (connection.check_user_exist_via_user_name(user_name)):
         if (logic.check_password(connection, user_name, user_password)):
-            return {
+            user_id = connection.fetch_user_id_via_user_name(user_name)
+            token = logic.encode_auth_token(user_id) 
+            print(type(token))
+            result = {
                 "success": True, 
-                "user_id": connection.fetch_user_id_via_user_name(user_name)
+                "user_id": connection.fetch_user_id_via_user_name(user_name),
+                "token": token 
             }
-    return {
-        "success": False
-    }
+            return json.dumps(result, indent=4, sort_keys=True, default=str)
+    result = { "success": False }
+    return json.dumps(result, indent=4, sort_keys=True, default=str)
+
+@app.route('/api/token_data')
+def token_data():
+    token = request.args.get('token')
+    token_id = logic.decode_auth_token(token)
+    return json.dumps({'id': token_id}, indent=4, sort_keys=True, default=str)
 
 @app.route('/api/user_exist')
 def user_exist():
@@ -170,12 +180,6 @@ def chatroom_list_update(transmission, methods=['GET', 'POST']):
     for room in data: 
         result.append({"chatroom_id": room[0], "chatroom_name": room[1]})
     socketio.emit('chatroom_list_update_server', json.dumps(result, indent=4, sort_keys=True, default=str))
-
-# ---- SOCKET IO PART ---- 
-
-
-
-
 
 if __name__ == '__main__':
     # Development Environment

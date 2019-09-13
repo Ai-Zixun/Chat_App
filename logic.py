@@ -29,11 +29,12 @@ class Logic:
     def decode_auth_token(self, token): 
         try:
             data = jwt.decode(token, JWT_SECRET_KEY)
-            # Token Not Expired 
             if (datetime.datetime.fromtimestamp(data['exp']) >= datetime.datetime.utcnow()):
                 return data['uid']
             else:
+                print("TOKEN EXPIRED")
                 return -1
         except:
+            print("TOKEN NOT VALID")
             return -1
 

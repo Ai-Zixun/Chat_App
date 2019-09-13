@@ -85,6 +85,8 @@ def server_and_logic():
 def jwt_test(): 
     logic = Logic()
     jwt = logic.encode_auth_token(1)
+    print(jwt)
+    print(type(jwt))
     print (logic.decode_auth_token(jwt))
 
 if __name__ == '__main__':
