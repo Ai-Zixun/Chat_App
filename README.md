@@ -14,6 +14,7 @@ http://ai-zixun.com/chat-app
 <p align="center">
   <img src="readme_img/icon-python.png" height="100" title="python">
   <img src="readme_img/icon-flask.png" height="100" title="flask">
+  <img src="readme_img/icon-socket-io.png" height="100" title="flask">
 </p>
 
 #### Deployment: AWS Elastic Beanstalk + Docker 
