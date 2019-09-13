@@ -171,6 +171,12 @@ def chatroom_list_update(transmission, methods=['GET', 'POST']):
         result.append({"chatroom_id": room[0], "chatroom_name": room[1]})
     socketio.emit('chatroom_list_update_server', json.dumps(result, indent=4, sort_keys=True, default=str))
 
+# ---- SOCKET IO PART ---- 
+
+
+
+
+
 if __name__ == '__main__':
     # Development Environment
     socketio.run(app, debug=True)

@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 80 443 5000 8080 
 
-CMD [ "python3", "./application.py" ]
+CMD [ "python3", "./server.py" ]

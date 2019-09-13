@@ -1,3 +1,5 @@
+import jwt 
+
 class Logic: 
     def __init__(self):
         pass 
@@ -8,3 +10,6 @@ class Logic:
         user_id = dbconnection.fetch_user_id_via_user_name(user_name)
         correct_password = dbconnection.fetch_user_password_via_user_id(user_id)
         return correct_password == inputed_password
+
+    def encode_auth_token(self, user_id): 
+        try 

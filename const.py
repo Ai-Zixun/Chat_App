@@ -4,4 +4,6 @@ DB_NAME = "chat_app_database"
 DB_USER = "postgres"
 DB_PASSWORD = "kurosu831107"
 
+JWT_SECRET_KEY = "SECRET_KEY"
+
 
