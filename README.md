@@ -39,8 +39,9 @@ A personal project to learn the basic web technology with React for the front-en
     1. Create your PostgreSQL database using the SQL commands provided in 
 ```
 ./others/note.sql
-```
-    2. Create a `const.py` file in the root directly with following information 
+``` 
+   2. Create a `const.py` file in the root directly with following information 
+    
 ```
 DB_HOST = # Your PostgreSQL Hosting Address
 DB_PORT = # Your PostgreSQL Hosting Port 
