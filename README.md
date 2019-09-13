@@ -12,13 +12,14 @@ http://ai-zixun.com/chat-app
 
 #### Back-End: Python + Flask + Socket IO
 <p align="center">
-  <img src="readme_img/icon-python.png" height="100" title="react">
-  <img src="readme_img/icon-flask.png" height="100" title="react">
+  <img src="readme_img/icon-python.png" height="100" title="python">
+  <img src="readme_img/icon-flask.png" height="100" title="flask">
 </p>
 
 #### Deployment: AWS Elastic Beanstalk + Docker 
 <p align="center">
   <img src="readme_img/icon-eb.png" height="100" title="eb">
+  <img src="readme_img/icon-docker.png" height="100" title="docker">
 </p>
 
 
