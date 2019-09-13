@@ -1,4 +1,8 @@
 import jwt 
+import os 
+import datetime 
+import time 
+from const import JWT_SECRET_KEY 
 
 class Logic: 
     def __init__(self):
@@ -12,4 +16,24 @@ class Logic:
         return correct_password == inputed_password
 
     def encode_auth_token(self, user_id): 
-        try 
+        try:         
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0.5),
+                'iat': datetime.datetime.utcnow(),
+                'uid': user_id
+            }
+            return jwt.encode(payload, JWT_SECRET_KEY, algorithm='HS256')
+        except Exception as exception:
+            return exception
+    
+    def decode_auth_token(self, token): 
+        try:
+            data = jwt.decode(token, JWT_SECRET_KEY)
+            # Token Not Expired 
+            if (datetime.datetime.fromtimestamp(data['exp']) >= datetime.datetime.utcnow()):
+                return data['uid']
+            else:
+                return -1
+        except:
+            return -1
+
