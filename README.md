@@ -26,9 +26,14 @@ docker run chatapp
 ## Web Technology Used in this project 
 
 #### Front-End: React.js; Bootstrap 4; HTML; CSS; Javascript 
+<p align="center">
+  <img src="readme_img/react-icon.png" height="100" title="react">
+</p>
 
 #### Back-End: Python + Flask + Socket IO
 
 #### Deployment: AWS Elastic Beanstalk + Docker 
-
+<p align="center">
+  <img src="readme_img/eb-icon.png" height="100" title="eb">
+</p>
 
