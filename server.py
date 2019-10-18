@@ -45,7 +45,6 @@ def login():
         if (logic.check_password(connection, user_name, user_password)):
             user_id = connection.fetch_user_id_via_user_name(user_name)
             token = logic.encode_auth_token(user_id) 
-            print(type(token))
             result = {
                 "success": True, 
                 "user_id": connection.fetch_user_id_via_user_name(user_name),
@@ -93,10 +92,14 @@ def create_user():
     if (user_name == None or user_password == None):
         abort(400)
     if (connection.create_user(user_name, user_password) == 0):
-        return {
+        user_id = connection.fetch_user_id_via_user_name(user_name)
+        token = logic.encode_auth_token(user_id) 
+        result = {
             "success": True, 
-            "user_id": connection.fetch_user_id_via_user_name(user_name)
+            "user_id": connection.fetch_user_id_via_user_name(user_name),
+            "token": token 
         }
+        return json.dumps(result, indent=4, sort_keys=True, default=str)
     return {
         "success": False
     }

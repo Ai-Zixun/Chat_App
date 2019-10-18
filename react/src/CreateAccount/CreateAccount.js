@@ -41,9 +41,11 @@ const CreateAccount = props => {
             else {
                 setAlert("null");
                 let id = createResponse.data.user_id;
-                console.log(id);
+                let token = passwordResponse.data.token; 
+                window.localStorage.setItem('id', id);
+                window.localStorage.setItem('token', token.substring(2, token.length - 1));
                 props.setID(id);
-                props.setPage("chatroom");
+                props.setPage("chatroom"); 
             }
         }
     }
