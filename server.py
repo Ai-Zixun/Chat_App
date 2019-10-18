@@ -84,7 +84,6 @@ def user_by_id():
         "username": username
     }
 
-
 @app.route('/api/create_user')
 def create_user():
     user_name = request.args.get('user_name')
@@ -135,17 +134,6 @@ def chatroom_create():
     return {
         "chatroom_id": chatroom_id
     }
-
-"""     
-@app.route('/api/chatroom_messages')
-def chatroom_messages():
-    chatroom_id = request.args.get('chatroom_id')
-    data = connection.fetch_message_via_chatroom_id(chatroom_id)
-    result = []
-    for message in data: 
-        result.append({"message_id": message[0], "user_name": message[1], "message": message[2], "created_date": message[3]})
-    return jsonify(result)
-"""
 
 @app.route('/api/chatroom_messages_all')
 def chatroom_messages_all():
