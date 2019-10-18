@@ -6,11 +6,6 @@ import CreateChatroom from '../CreateChatroom/CreateChatroom';
 import './Chatroom.css';
 
 const Chatroom = props => {
-    // Something Must be wrong here, I shouldn't need to do this. 
-    const [, updateState] = React.useState();
-    const forceUpdate = React.useCallback(() => updateState({}), []);
-    //////////////////////////////////////////////////////////////////
-
     // ------ CHATROOM TAGS ------
     const [text, setText] = useState("");
     const [rooms, setRooms] = useState([]);
