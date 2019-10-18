@@ -41,7 +41,7 @@ const CreateAccount = props => {
             else {
                 setAlert("null");
                 let id = createResponse.data.user_id;
-                let token = passwordResponse.data.token; 
+                let token = createResponse.data.token; 
                 window.localStorage.setItem('id', id);
                 window.localStorage.setItem('token', token.substring(2, token.length - 1));
                 props.setID(id);
