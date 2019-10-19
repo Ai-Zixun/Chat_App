@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev \
     && pip install psycopg2 \
-    && pip install flask \ 
+    && pip install django \ 
     && pip install flask-socketIO \
     && pip install pyjwt
 
