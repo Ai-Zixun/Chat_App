@@ -85,11 +85,13 @@ class DBConnection:
 
     # USER TABLE - CREATE  
 
-    def create_user(self, user_name, user_password): 
+    def create_user(self, user_name, user_password):
+        print("DB CREATE USER - Called ") 
         sql_command = ("INSERT INTO user_table (user_id, user_name, user_password, user_email, created_date) VALUES  (DEFAULT, '" + str(user_name) + "', '" + str(user_password) + "', NULL, CURRENT_TIMESTAMP);")
         try:
             self.cursor.execute(sql_command)
             self.connection.commit()
+            print("DB CREATE USER")
         except:
             self.connection.rollback()
             return -1

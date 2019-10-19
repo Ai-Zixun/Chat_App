@@ -34,7 +34,9 @@ const CreateAccount = props => {
             setAlert("email-format"); 
         } 
         else {
+            console.log("Before sending the create user request")
             let createResponse = await axios.get(API.API_URL + '/api/create_user', { params: { user_name: username, user_password: password  } });
+            console.log("After sending the create user request")
             if (! createResponse.data.success) {
                 setAlert("syste-error");
             }

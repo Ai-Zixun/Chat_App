@@ -86,6 +86,7 @@ def user_by_id():
 
 @app.route('/api/create_user')
 def create_user():
+    print('SERVER - CREATE USER CALLED')
     user_name = request.args.get('user_name')
     user_password = request.args.get('user_password')
     if (user_name == None or user_password == None):

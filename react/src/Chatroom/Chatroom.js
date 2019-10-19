@@ -163,6 +163,8 @@ const Chatroom = props => {
     const signOutHandler = () => {
         props.setPage("login");
         window.localStorage.setItem('token', null);
+        window.localStorage.setItem('id', null);
+        window.location.reload();
     }
 
     // ------ RETURN ------
