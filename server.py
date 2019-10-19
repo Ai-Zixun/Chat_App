@@ -178,6 +178,6 @@ def chatroom_list_update(transmission, methods=['GET', 'POST']):
 
 if __name__ == '__main__':
     # Development Environment
-    socketio.run(app, debug=True)
+    # socketio.run(app, debug=True)
     # Deployment Environment 
-    # socketio.run(app, host='0.0.0.0', port=80, debug=False)
+    socketio.run(app, host='0.0.0.0', port=80, debug=False)
